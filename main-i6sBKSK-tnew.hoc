@@ -1,0 +1,1229 @@
+//  Initialize
+
+create soma, iseg, axon[1], myelin[1], node[1], iseg, nodes[1], nodec[1], myelinc[1], term
+
+//================================================================================
+func var_defined(){
+  if( name_declared( $s1 ) == 5 ) return 1
+  return 0
+}
+
+//-------------------------------------------------------------------------------
+objref synL, synNL	// list of synapses (and their section Names)
+
+  ifn=5
+proc do_cell(){ local i localobj syn  //, str
+  forall delete_section()
+//
+  if (ifn==1) {
+      load_file( 1, "Zone1s.hoc" )
+      nodes[0] {diam(0:1)=3.67:1.216 L=1 nseg=1}
+      nodes[1] {diam(0:1)=3.67:1.216 L=1 nseg=1}
+      forsec "nodec" {diam=1.216 L=1 nseg=1}
+      forsec "myelinc" {diam=1.216 L=125 nseg=3}
+      term {diam=1.216 L=200 nseg=5}
+      myelinc[0].L=50
+      aXm_cm=0.02
+      aXm_Rm=60000
+      soma_cm=0.05
+      soma_Rm=24000
+   }
+
+  if (ifn==2) {
+      load_file( 1, "Zone2s.hoc" )
+      nodes[0] {diam=4.326 L=1 nseg=1}
+      nodes[1] {diam(0:1)=4.326:1.85 L=1 nseg=1}
+      myelin[1] {diam=2.15 L=215 nseg=3}
+      node[1] {diam=2.15 L=1 nseg=1}
+      forsec "nodec" {diam=1.85 L=1 nseg=1}
+      forsec "myelinc" {diam=1.85 L=200 nseg=3}
+      term {diam=1.85 L=200 nseg=5}
+      myelinc[0].L=150
+      aXm_cm=0.01
+      aXm_Rm=120000
+      soma_cm=0.04
+      soma_Rm=30000
+   }
+    if (ifn==5) {
+      load_file( 1, "Zone5s.hoc" )
+      nodes[0] {diam=1.23 L=1 nseg=1}
+      nodes[1] {diam=1.23 L=1 nseg=1}
+      forsec "nodec" {diam=1.1 L=1 nseg=1}
+      forsec "myelinc" {diam=1.1 L=110 nseg=3}
+      term {diam=1.1 L=200 nseg=5}
+      myelinc[0].L=20
+      aXm_cm=0.02
+      aXm_Rm=60000
+      soma_cm=0.05
+      soma_Rm=24000
+   }
+//
+  if (ifn==72) {
+      load_file( 1, "Zone4_72.hoc" )
+      nodes[0] {diam(0:1)=2.5:1.512  L=1 nseg=1}
+      nodes[1] {diam(0:1)=2.0:1.7  L=1 nseg=1}
+      forsec "nodec" {diam=1.7 L=1 nseg=1}
+      forsec "myelinc" {diam=1.7 L=170 nseg=3}
+      term {diam=1.8 L=200 nseg=5}
+      myelinc[0].L=90
+      aXm_cm=0.01
+      aXm_Rm=120000
+      soma_cm=0.04
+      soma_Rm=30000
+   }
+
+    access axon[0]   //  axon[0] is just before the first branch point
+  distance()
+  
+  forall {
+    insert pas
+  }
+  forsec "bouton" {
+    if( var_defined( "Gbar_Nav16_b"))	insert Nav16
+    if( var_defined( "Gbar_Kv31_b"))	insert Kv31  
+    if( var_defined( "Gbar_Kv3s_b"))	insert Kv3s  
+    if( var_defined( "Gbar_Kv12_b"))	insert Kv12  
+    if( var_defined( "Gbar_Kv43A_b"))	insert Kv43A
+    if( var_defined( "Gbar_Kv7M_b"))	insert Kv7M
+    if( var_defined( "Gbar_H_HCNl_b"))	insert H_HCNl
+    if( var_defined( "Gbar_ab4BK2_b"))	insert ab4BK2
+    if( var_defined( "Pbar_caL_b"))	insert caL   
+    if( var_defined( "Gbar_ab4BK2_b"))	insert cdp   
+    if( var_defined( "Gbar_SK_b"))	insert SK
+  }
+  forsec "soma" {
+    if( var_defined( "Gbar_Nav16_s"))	insert Nav16
+    if( var_defined( "Gbar_Kv31_s"))	insert Kv31  
+    if( var_defined( "Gbar_Kv3s_s"))	insert Kv3s  
+    if( var_defined( "Gbar_Kv12_s"))	insert Kv12  
+    if( var_defined( "Gbar_Kv43A_s"))	insert Kv43A
+    if( var_defined( "Gbar_Kv7M_s"))	insert Kv7M
+    if( var_defined( "Gbar_H_HCNl_s"))	insert H_HCNl
+    if( var_defined( "Gbar_ab4BK2_s"))	insert ab4BK2
+    if( var_defined( "Pbar_caL_s"))	insert caL   
+    if( var_defined( "Gbar_ab4BK2_s"))	insert cdp13 
+    if( var_defined( "Gbar_SK_s"))	insert SK
+  }
+  forsec "axon" {
+    if( var_defined( "Gbar_Nav16_a"))	insert Nav16
+    if( var_defined( "Gbar_Kv31_a"))	insert Kv31  
+    if( var_defined( "Gbar_Kv3s_a"))	insert Kv3s  
+    if( var_defined( "Gbar_Kv12_a"))	insert Kv12  
+    if( var_defined( "Gbar_Kv43A_a"))	insert Kv43A
+    if( var_defined( "Gbar_Kv7M_a"))	insert Kv7M
+    if( var_defined( "Gbar_H_HCNl_a"))	insert H_HCNl
+    if( var_defined( "Gbar_ab4BK2_a"))	insert ab4BK2
+    if( var_defined( "Pbar_caL_a"))	insert caL   
+    if( var_defined( "Gbar_ab4BK2_a"))	insert cdp   
+    if( var_defined( "Gbar_SK_a"))	insert SK
+  }
+  forsec "iseg" {
+    if( var_defined( "Gbar_Nav16_i"))	insert Nav16
+    if( var_defined( "Gbar_Kv31_i"))	insert Kv31  
+    if( var_defined( "Gbar_Kv3s_i"))	insert Kv3s  
+    if( var_defined( "Gbar_Kv12_i"))	insert Kv12  
+    if( var_defined( "Gbar_Kv43A_i"))	insert Kv43A
+    if( var_defined( "Gbar_Kv7M_i"))	insert Kv7M
+    if( var_defined( "Gbar_H_HCNl_i"))	insert H_HCNl
+    if( var_defined( "Gbar_ab4BK2_i"))	insert ab4BK2
+    if( var_defined( "Pbar_caL_i"))	insert caL   
+    if( var_defined( "Gbar_ab4BK2_i"))	insert cdp   
+    if( var_defined( "Gbar_SK_i"))	insert SK
+  }
+  forsec "myelin" {
+    if( var_defined( "Gbar_Nav16_m"))	insert Nav16
+    if( var_defined( "Gbar_Kv31_m"))	insert Kv31  
+    if( var_defined( "Gbar_Kv3s_m"))	insert Kv3s  
+    if( var_defined( "Gbar_Kv12_m"))	insert Kv12  
+    if( var_defined( "Gbar_Kv43A_m"))	insert Kv43A
+    if( var_defined( "Gbar_Kv7M_m"))	insert Kv7M
+    if( var_defined( "Gbar_H_HCNl_m"))	insert H_HCNl
+    if( var_defined( "Gbar_ab4BK2_m"))	insert ab4BK2
+    if( var_defined( "Pbar_caL_m"))	insert caL   
+    if( var_defined( "Gbar_ab4BK2_m"))	insert cdp   
+    if( var_defined( "Gbar_SK_m"))	insert SK
+  }
+  forsec "node" {
+    if( var_defined( "Gbar_Nav16_n"))	insert Nav16
+    if( var_defined( "Gbar_Kv31_n"))	insert Kv31  
+    if( var_defined( "Gbar_Kv3s_n"))	insert Kv3s  
+    if( var_defined( "Gbar_Kv12_n"))	insert Kv12  
+    if( var_defined( "Gbar_Kv43A_n"))	insert Kv43A
+    if( var_defined( "Gbar_Kv7M_n"))	insert Kv7M
+    if( var_defined( "Gbar_H_HCNl_n"))	insert H_HCNl
+    if( var_defined( "Gbar_ab4BK2_n"))	insert ab4BK2
+    if( var_defined( "Pbar_caL_n"))	insert caL   
+    if( var_defined( "Gbar_ab4BK2_n"))	insert cdp   
+    if( var_defined( "Gbar_SK_n"))	insert SK
+  }
+  forsec "term" {
+    if( var_defined( "Gbar_Nav16_t"))	insert Nav16
+    if( var_defined( "Gbar_Kv31_t"))	insert Kv31  
+    if( var_defined( "Gbar_Kv3s_t"))	insert Kv3s  
+    if( var_defined( "Gbar_Kv12_t"))	insert Kv12  
+    if( var_defined( "Gbar_Kv43A_t"))	insert Kv43A
+    if( var_defined( "Gbar_Kv7M_t"))	insert Kv7M
+    if( var_defined( "Gbar_H_HCNl_t"))	insert H_HCNl
+    if( var_defined( "Gbar_ab4BK2_t"))	insert ab4BK2
+    if( var_defined( "Pbar_caL_t"))	insert caL   
+    if( var_defined( "Gbar_ab4BK2_t"))	insert cdp   
+    if( var_defined( "Gbar_SK_t"))	insert SK
+  }
+  synL = new List()			// synapse List
+//  synNL = new List()
+  forsec "bouton" {
+//    str = new str_obj()
+//    synNL.append( str.sPrint( "%s", secname() ))
+    syn = new ribbon1( 0.5 ) 		// create synapse 
+    syn.xp = x3d(0.5)  syn.yp= y3d(0.5)  syn.zp= z3d(0.5)
+    syn.dist=distance(0.5)
+    syn.sw=swdef
+    syn.tau=taudef
+    synL.append( syn )
+  }
+  showsynL()
+}
+
+proc showsynL(){ local i
+  for i=0, synL.count-1 {
+     ribbon1[i].get_loc()
+     printf( "synapse %3d at %12s at %4d %4d %4d %8.3f %8.3f\n", \
+         i, secname(), synL.o(i).xp, synL.o(i).yp, synL.o(i).zp, synL.o(i).dist, synL.o(i).sw )
+     pop_section()
+  }
+}
+  
+//================================================================================
+proc init_cell(){	
+//  v_init	= G_e_pas
+  forall {
+    e_pas	= G_e_pas
+    g_pas	= 1 / G_Rm
+    Ra		= G_Ra
+    cm		= G_cm
+    if( var_defined( "G_ena"))	ena	= G_ena
+    if( var_defined( "G_ek"))	ek	= G_ek
+  }
+  forsec "myelin" {
+    cm		= aXm_cm
+    g_pas	= 1/aXm_Rm
+  }
+  forsec "nodes" {        // not actual nodes. bracket soma.  assumed myelinated
+    cm		= aXm_cm
+    g_pas	= 1/aXm_Rm
+  }
+  forsec "soma" {
+    cm		= soma_cm
+    g_pas	=1/soma_Rm
+  }
+  forsec "soma" {
+    if( var_defined( "Gbar_Nav16_s"))	gbar_Nav16 	= Gbar_Nav16_s
+    if( var_defined( "Gbar_Kv12_s"))	gbar_Kv12	= Gbar_Kv12_s
+    if( var_defined( "Gbar_Kv31_s"))	gbar_Kv31	= Gbar_Kv31_s
+    if( var_defined( "Gbar_Kv3s_s"))	gbar_Kv3s	= Gbar_Kv3s_s
+    if( var_defined( "Gbar_Kv43A_s"))	gbar_Kv43A	= Gbar_Kv43A_s
+    if( var_defined( "Gbar_Kv7M_s"))	gbar_Kv7M	= Gbar_Kv7M_s
+    if( var_defined( "Gbar_H_HCNl_s"))	gbar_H_HCNl	= Gbar_H_HCNl_s
+    if( var_defined( "Gbar_ab4BK2_s"))	gbar_ab4BK2	= Gbar_ab4BK2_s
+    if( var_defined( "Pbar_caL_s"))	pbar_caL   	= Pbar_caL_s
+    if( var_defined( "Gbar_SK_s"))	gbar_SK		= Gbar_SK_s
+  }
+  forsec "iseg" {
+    if( var_defined( "Gbar_Nav16_i"))	gbar_Nav16 	= Gbar_Nav16_i
+    if( var_defined( "Gbar_Kv12_i"))	gbar_Kv12	= Gbar_Kv12_i
+    if( var_defined( "Gbar_Kv31_i"))	gbar_Kv31	= Gbar_Kv31_i
+    if( var_defined( "Gbar_Kv3s_i"))	gbar_Kv3s	= Gbar_Kv3s_i
+    if( var_defined( "Gbar_Kv43A_i"))	gbar_Kv43A	= Gbar_Kv43A_i
+    if( var_defined( "Gbar_Kv7M_i"))	gbar_Kv7M	= Gbar_Kv7M_i
+    if( var_defined( "Gbar_H_HCNl_i"))	gbar_H_HCNl	= Gbar_H_HCNl_i
+    if( var_defined( "Gbar_ab4BK2_i"))	gbar_ab4BK2	= Gbar_ab4BK2_i
+    if( var_defined( "Pbar_caL_i"))	pbar_caL   	= Pbar_caL_i
+    if( var_defined( "Gbar_SK_i"))	gbar_SK		= Gbar_SK_i
+  }
+  forsec "myelin" {
+    if( var_defined( "Gbar_Nav16_m"))	gbar_Nav16 	= Gbar_Nav16_m
+    if( var_defined( "Gbar_Kv12_m"))	gbar_Kv12	= Gbar_Kv12_m
+    if( var_defined( "Gbar_Kv31_m"))	gbar_Kv31	= Gbar_Kv31_m
+    if( var_defined( "Gbar_Kv3s_m"))	gbar_Kv3s	= Gbar_Kv3s_m
+    if( var_defined( "Gbar_Kv43A_m"))	gbar_Kv43A	= Gbar_Kv43A_m
+    if( var_defined( "Gbar_Kv7M_m"))	gbar_Kv7M	= Gbar_Kv7M_m
+    if( var_defined( "Gbar_H_HCNl_m"))	gbar_H_HCNl	= Gbar_H_HCNl_m
+    if( var_defined( "Gbar_ab4BK2_m"))	gbar_ab4BK2	= Gbar_ab4BK2_m
+    if( var_defined( "Pbar_caL_m"))	pbar_caL 	= Pbar_caL_m
+    if( var_defined( "Gbar_SK_m"))	gbar_SK		= Gbar_SK_m
+  }
+  forsec "bout" {
+    if( var_defined( "Gbar_Nav16_b"))	gbar_Nav16 	= Gbar_Nav16_b
+    if( var_defined( "Gbar_Kv12_b"))	gbar_Kv12	= Gbar_Kv12_b
+    if( var_defined( "Gbar_Kv31_b"))	gbar_Kv31	= Gbar_Kv31_b
+    if( var_defined( "Gbar_Kv3s_b"))	gbar_Kv3s	= Gbar_Kv3s_b
+    if( var_defined( "Gbar_Kv43A_b"))	gbar_Kv43A	= Gbar_Kv43A_b
+    if( var_defined( "Gbar_Kv7M_b"))	gbar_Kv7M	= Gbar_Kv7M_b
+    if( var_defined( "Gbar_H_HCNl_b"))	gbar_H_HCNl	= Gbar_H_HCNl_b
+    if( var_defined( "Gbar_ab4BK2_b"))	gbar_ab4BK2	= Gbar_ab4BK2_b
+    if( var_defined( "Pbar_caL_b"))	pbar_caL   	= Pbar_caL_b
+    if( var_defined( "Gbar_SK_b"))	gbar_SK		= Gbar_SK_b
+  }
+  forsec "axon" {
+    if( var_defined( "Gbar_Nav16_a"))	gbar_Nav16 	= Gbar_Nav16_a
+    if( var_defined( "Gbar_Kv12_a"))	gbar_Kv12	= Gbar_Kv12_a
+    if( var_defined( "Gbar_Kv31_a"))	gbar_Kv31	= Gbar_Kv31_a
+    if( var_defined( "Gbar_Kv3s_a"))	gbar_Kv3s	= Gbar_Kv3s_a
+    if( var_defined( "Gbar_Kv43A_a"))	gbar_Kv43A	= Gbar_Kv43A_a
+    if( var_defined( "Gbar_Kv7M_a"))	gbar_Kv7M	= Gbar_Kv7M_a
+    if( var_defined( "Gbar_H_HCNl_a"))	gbar_H_HCNl	= Gbar_H_HCNl_a
+    if( var_defined( "Gbar_ab4BK2_a"))	gbar_ab4BK2	= Gbar_ab4BK2_a
+    if( var_defined( "Pbar_caL_a"))	pbar_caL   	= Pbar_caL_a
+    if( var_defined( "Gbar_SK_a"))	gbar_SK		= Gbar_SK_a
+  }
+  forsec "axon[0]" {
+    if( var_defined( "Gbar_Nav16_a1"))	gbar_Nav16 	= Gbar_Nav16_a1
+    if( var_defined( "Gbar_Kv12_a1"))	gbar_Kv12	= Gbar_Kv12_a1
+    if( var_defined( "Gbar_Kv31_a1"))	gbar_Kv31	= Gbar_Kv31_a1
+    if( var_defined( "Gbar_Kv3s_a1"))	gbar_Kv3s	= Gbar_Kv3s_a1
+    if( var_defined( "Gbar_Kv43A_a1"))	gbar_Kv43A	= Gbar_Kv43A_a1
+    if( var_defined( "Gbar_Kv7M_a1"))	gbar_Kv7M	= Gbar_Kv7M_a1
+    if( var_defined( "Gbar_H_HCNl_a1"))	gbar_H_HCNl	= Gbar_H_HCNl_a1
+    if( var_defined( "Gbar_ab4BK2_a1"))	gbar_ab4BK2	= Gbar_ab4BK2_a1
+    if( var_defined( "Pbar_caL_a1"))	pbar_caL   	= Pbar_caL_a1
+    if( var_defined( "Gbar_SK_a1"))	gbar_SK		= Gbar_SK_a1
+  }
+  forsec "node" {
+    if( var_defined( "Gbar_Nav16_n"))	gbar_Nav16 	= Gbar_Nav16_n
+    if( var_defined( "Gbar_Kv12_n"))	gbar_Kv12	= Gbar_Kv12_n
+    if( var_defined( "Gbar_Kv31_n"))	gbar_Kv31	= Gbar_Kv31_n
+    if( var_defined( "Gbar_Kv3s_n"))	gbar_Kv3s	= Gbar_Kv3s_n
+    if( var_defined( "Gbar_Kv43A_n"))	gbar_Kv43A	= Gbar_Kv43A_n
+    if( var_defined( "Gbar_Kv7M_n"))	gbar_Kv7M	= Gbar_Kv7M_n
+    if( var_defined( "Gbar_H_HCNl_n"))	gbar_H_HCNl	= Gbar_H_HCNl_n
+    if( var_defined( "Gbar_ab4BK2_n"))	gbar_ab4BK2	= Gbar_ab4BK2_n
+    if( var_defined( "Pbar_caL_n"))	pbar_caL   	= Pbar_caL_n
+    if( var_defined( "Gbar_SK_n"))	gbar_SK		= Gbar_SK_n
+  }
+
+  forsec "nodes" {
+    if( var_defined( "Gbar_Nav16_ns"))	gbar_Nav16 	= Gbar_Nav16_ns
+    if( var_defined( "Gbar_Kv12_ns"))	gbar_Kv12	= Gbar_Kv12_ns
+    if( var_defined( "Gbar_Kv31_ns"))	gbar_Kv31	= Gbar_Kv31_ns
+    if( var_defined( "Gbar_Kv3s_ns"))	gbar_Kv3s	= Gbar_Kv3s_ns
+    if( var_defined( "Gbar_Kv43A_ns"))	gbar_Kv43A	= Gbar_Kv43A_ns
+    if( var_defined( "Gbar_Kv7M_ns"))	gbar_Kv7M	= Gbar_Kv7M_ns
+    if( var_defined( "Gbar_H_HCNl_ns"))	gbar_H_HCNl	= Gbar_H_HCNl_ns
+    if( var_defined( "Gbar_ab4BK2_ns"))	gbar_ab4BK2	= Gbar_ab4BK2_ns
+    if( var_defined( "Pbar_caL_ns"))	pbar_caL   	= Pbar_caL_ns
+    if( var_defined( "Gbar_SK_ns"))	gbar_SK		= Gbar_SK_ns
+  }
+
+  forsec "nodec" {
+    if( var_defined( "Gbar_Nav16_nc"))	gbar_Nav16 	= Gbar_Nav16_nc
+    if( var_defined( "Gbar_Kv12_nc"))	gbar_Kv12	= Gbar_Kv12_nc
+    if( var_defined( "Gbar_Kv31_nc"))	gbar_Kv31	= Gbar_Kv31_nc
+    if( var_defined( "Gbar_Kv3s_nc"))	gbar_Kv3s	= Gbar_Kv3s_nc
+    if( var_defined( "Gbar_Kv43A_nc"))	gbar_Kv43A	= Gbar_Kv43A_nc
+    if( var_defined( "Gbar_Kv7M_nc"))	gbar_Kv7M	= Gbar_Kv7M_nc
+    if( var_defined( "Gbar_H_HCNl_nc"))	gbar_H_HCNl	= Gbar_H_HCNl_nc
+    if( var_defined( "Gbar_ab4BK2_nc"))	gbar_ab4BK2	= Gbar_ab4BK2_nc
+    if( var_defined( "Pbar_caL_nc"))	pbar_caL   	= Pbar_caL_nc
+    if( var_defined( "Gbar_SK_nc"))	gbar_SK		= Gbar_SK_nc
+  }
+  forsec "term" {
+    if( var_defined( "Gbar_Nav16_t"))	gbar_Nav16 	= Gbar_Nav16_t
+    if( var_defined( "Gbar_Kv12_t"))	gbar_Kv12	= Gbar_Kv12_t
+    if( var_defined( "Gbar_Kv31_t"))	gbar_Kv31	= Gbar_Kv31_t
+    if( var_defined( "Gbar_Kv3s_t"))	gbar_Kv3s	= Gbar_Kv3s_t
+    if( var_defined( "Gbar_Kv43A_t"))	gbar_Kv43A	= Gbar_Kv43A_t
+    if( var_defined( "Gbar_Kv7M_t"))	gbar_Kv7M	= Gbar_Kv7M_t
+    if( var_defined( "Gbar_H_HCNl_t"))	gbar_H_HCNl	= Gbar_H_HCNl_t
+    if( var_defined( "Gbar_ab4BK2_t"))	gbar_ab4BK2	= Gbar_ab4BK2_t
+    if( var_defined( "Pbar_caL_t"))	pbar_caL	= Pbar_caL_t
+    if( var_defined( "Gbar_SK_t"))	gbar_SK		= Gbar_SK_t
+  }
+
+
+  set_nseg( lambda_f_d )
+  ad=0
+  ib=0
+  forsec "bou" {
+     ad = ad+diam
+     ib=ib+1
+   }
+   ad=ad/ib
+  ad1=1.6
+   print "ave bou diam ", ad, " ", ib, "cdiam= ", ad1
+}    
+
+proc set_nseg(){
+  nseg_tot = 0
+  //  soma area( 0.5 )
+  forall { 
+    if( lambda_f_d <= 0 ) nseg = 1
+    if( lambda_f_d > 0 ) nseg = int((L/($1 *lambda_f(100))+.9)/2)*2 + 1 
+    nseg_tot += nseg
+  }
+  forsec "bou" {
+     nseg=3
+     nseg_tot=nseg_tot+2
+  }
+  forsec "iseg" {
+     if (nseg=1) {
+        nseg=3
+        nseg_tot=nseg_tot+2
+     }
+  }
+  forsec "soma" {
+     if (nseg=1) {
+        nseg=3
+        nseg_tot=nseg_tot+2
+     }
+  }
+  forsec "axon" {
+     if (nseg=1) {
+        nseg=3
+        nseg_tot=nseg_tot+2
+     }
+  }
+  forsec "myel" {
+     if (nseg=1) {
+        nseg=3
+        nseg_tot=nseg_tot+2
+     }
+  }
+  printf( "lambda-d %g nseg_tot %d\n", $1, nseg_tot )
+}
+
+proc getg() {local rmm
+   forall {
+      rmm = 1/((g_Nav16(0.5) + g_Kv31(0.5)+g_Kv12(0.5)+g_Kv43A(0.5)+g_Kv3s(0.5)+g_Kv7M(0.5)+g_H_HCNl(0.5))*1e-4 + g_pas(0.5))
+      print secname(), " ", rmm, " ", g_pas(0.5)*1e4, " ", g_Nav16(0.5), " ", g_Kv31(0.5), " ", g_H_HCNl(0.5)
+   }
+}
+
+proc els() { local rmm, lam, el, lamp, elp
+   forall {
+      rmm = 1/((g_Nav16(0.5) + g_Kv31(0.5)+g_Kv12(0.5)+g_Kv43A(0.5)+g_Kv3s(0.5)+g_Kv7M(0.5)+g_H_HCNl(0.5)+g_SK(0.5)+g_ab4BK2(0.5))*1e-4 + g_pas(0.5))
+      lam = sqrt ((rmm*diam*1e-4)/(Ra*4))
+      el = L*1e-4/lam
+      lamp = sqrt ((1/g_pas(0.5)*diam*1e-4)/(Ra*4))
+      elp = L*1e-4/lamp
+      printf ("%-11s %8.4f %8.4f %8.4f %8.4f\n",  secname(), lam, lamp, el, elp )
+   }
+}
+
+proc els_file() { local rmm,lam,el,lamp,elp localobj dF
+   strdef strs3
+   strs3=$s1
+   dF= new File()
+   dF.wopen(strs3)
+   forall {
+      rmm = 1/((g_Nav16(0.5) + g_Kv31(0.5)+g_Kv12(0.5)+g_Kv43A(0.5)+g_Kv3s(0.5)+g_Kv7M(0.5)+g_H_HCNl(0.5))*1e-4 + g_pas(0.5))
+      lam = sqrt ((rmm*diam*1e-4)/(Ra*4))
+      el = L*1e-4/lam
+      lamp = sqrt ((1/g_pas(0.5)*diam*1e-4)/(Ra*4))
+      elp = L*1e-4/lamp
+      dF.printf ("%-11s %10.2f %8.4f %8.4f %8.4f %8.4f\n",  secname(), rmm, lam, lamp, el, elp) 
+   }
+}
+
+proc rate() { local ataun    // enter as rate per second, convert to wait time        
+   ataun=$1
+   if (ataun > 0) {
+      atau_ribbon1=1e3/ataun
+   } else{
+      atau_ribbon1=0
+   }
+}
+
+proc weig() {local neww
+   neww=$1
+   for i=0,synL.count-1 synL.o(i).sw=neww
+   print " new synaptic weights = ", neww
+}
+
+proc nsyntau() { local newt
+   newt=$1
+   for i=0,synL.count-1 synL.o(i).tau=newt
+}
+
+proc sw_by_cdiam() { local i
+   for i=0,synL.count-1 {
+      ribbon1[i].get_loc()
+      synL.o(i).sw=synL.o(i).sw*diam/ad1
+      printf("%-12s %8.3f\n", secname(), synL.o(i).sw)
+      pop_section()
+   }
+}
+
+proc sw_by_diam() { local i
+   for i=0,synL.count-1 {
+      ribbon1[i].get_loc()
+      synL.o(i).sw=synL.o(i).sw*diam/ad
+      printf("%-12s %8.3f\n", secname(), synL.o(i).sw)
+      pop_section()
+   }
+}
+
+proc init() { local dtsav, temp, t2, t1, t0, dt2, dt1, dt0, it0, it1, it2
+   init_cell()
+   finitialize (v_init)
+//                             added this
+   t2 = 3e9
+   t1 = 100
+   t0 = 30
+   dt2 = 1e8
+   dt1 = 0.1
+   dt0 = 0.1
+   it0 = -1*t0
+   it1 = -1*(t0 + t1)
+   it2 = -1*(t0 + t1 + t2)
+   
+   t = it2
+   dtsav = dt
+   dt = dt2
+//                             to here (also added local variables)
+//   t = -1e10			remove 3 lines
+//   dtsav = dt
+//   dt=1e9
+   //  if cvode is on, turn it off to do large fixed step
+   temp = cvode.active()
+   if (temp != 0) {cvode.active(0) }
+
+   while (t < it1) {
+//   while (t<-1e9)  {         change while
+      fadvance()
+   }
+//				add this
+   dt=dt1
+   cvode.active(1)
+   cvode.atol(1e-4)
+   while ( t<it0) {
+      fadvance()
+   }
+   cvode.active(0)
+   dt = dt0
+   t = it0
+   while(t<0) {
+      fadvance()
+   }
+//				to here
+
+   // restore cvode if necessary
+   if (temp != 0) { cvode.active(1) }
+   dt = dtsav
+   t=0
+   if (cvode.active()) {
+      cvode.re_init()
+   } else {
+      fcurrent()
+   }
+   frecord_init()
+}
+
+//===============================================================================
+
+proc plot_one(){ local i, atau, ts
+  i=$1
+  atau = atau_ribbon1 
+  ts = tstop
+  atau_ribbon1 = 0 
+  tstop = 40
+  synL.o(i).del=10 run() synL.o(i).del=-1 
+  atau_ribbon1 = atau 
+  tstop = ts
+}
+
+proc plot_syns(){ local i, atau, ts
+  atau = atau_ribbon1 
+  ts = tstop
+  atau_ribbon1 = 0 
+  tstop = 40
+  for i=0, synL.count-1 { synL.o(i).del=10 run() synL.o(i).del=-1 }
+  atau_ribbon1 = atau 
+  tstop = ts
+}
+
+proc printm() {
+  forsec "mye" print secname(), " ", diam, " ", L
+}
+
+//===============================================================================
+
+proc arun1() {local i, n, y, th, avg, avgm1, sd, SS, cv, rate, spikes, freq localobj nc, nil, vec_v, vec_t, sT2
+   vec_v = new Vector()
+   vec_t = new Vector()
+   sT2   = new Vector()
+   soma nc = new NetCon(&v(.5),nil)
+   nc.threshold=-20
+   nc.record(sT2)
+   run()
+   n=0
+   sd=0
+   cv=0
+   avg=0
+   y=sT2.x[0]
+//   for i=0,sT2.size-1 print sT2.size
+//   print sT2.size
+   print sT2.x[0],y,n,avg,sd,cv
+   for i=1,sT2.size-1 {
+      y=sT2.x[i]-sT2.x[i-1]
+      n+=1
+      if(n==1) {
+         avg = y
+         SS=0
+         print sT2.x[1], y, n, avg, sd, cv
+      } else {
+         avgm1=avg
+         avg = avgm1 + (y - avgm1)/n
+         SS = SS + (y-avgm1)*(y - avg)
+         if (n>1) sd = sqrt(SS/(n-1))
+         if (avg!=0.0) cv = sd/avg
+         print sT2.x[i], y, n, avg, sd, cv   
+      }
+   }
+   if (n>1) sd = sqrt(SS/(n-1))
+   if (avg!=0.0) cv = sd/avg
+   if (atau_ribbon1 > 0) {
+      rate=1e3/atau_ribbon1
+      } else { rate = 0}
+   spikes = sT2.size
+   freq = spikes*1e3/tstop
+   printf( "tstop %9g HCrate %8g spikes %6g freq %8g Hz   avgISI %8g sd %8g cv %8g\n", tstop, rate, spikes, freq, avg, sd, cv)
+}
+
+proc moreBKSK () {
+  forsec "iseg" {
+	TotalPump_cdp	=	3e-11
+	TotalBuffer_cdp	=	0.03
+        Pbar_caL_i      =       7.5e-4
+        Gbar_SK_i       =       20
+        Gbar_ab4BK2_i   =       300
+  }
+  forsec "soma" {
+	insert caL 
+	insert SK 
+	insert ab4BK2
+	Pbar_caL_s	=	7.5e-7
+	Gbar_SK_s	=	0.02
+        Gbar_ab4BK2_s 	= 	0.3
+	insert cdp13
+	TotalPump_cdp13	=	3e-13
+	TotalBuffer_cdp13	=	.03   
+  }
+  forsec "node" {
+	insert caL 
+	insert SK 
+	insert ab4BK2
+	Pbar_caL_n	=	5e-4   
+	Gbar_SK_n	=	13.3
+        Gbar_ab4BK2_n 	= 	200
+	Pbar_caL_nc	=	5e-4   
+	Gbar_SK_nc	=	13.3
+        Gbar_ab4BK2_nc 	= 	200
+	insert cdp
+	TotalPump_cdp	=	2e-11
+	TotalBuffer_cdp	=	.03
+  }
+  forsec "nodes" {  
+	insert caL 
+	insert SK 
+	insert ab4BK2
+	Pbar_caL_ns	=	7.5e-7 
+	Gbar_SK_ns	=	0.02
+        Gbar_ab4BK2_ns 	= 	.3 
+	insert cdp
+	TotalPump_cdp	=	3e-13
+	TotalBuffer_cdp	=	.03   
+  }
+}
+
+
+proc remove_M() {
+  Gbar_Kv7M_a=0
+  Gbar_Kv7M_a1=0
+  Gbar_Kv7M_i=0
+  Gbar_Kv7M_m=0
+  Gbar_Kv7M_n=0
+  Gbar_Kv7M_t=0
+  Gbar_Kv7M_b=0
+  Gbar_Kv7M_s=0
+  Gbar_Kv7M_ns=0
+  Gbar_Kv7M_nc=0
+}
+
+proc remove_D() {
+  Gbar_Kv12_a=0
+  Gbar_Kv12_a1=0
+  Gbar_Kv12_i=0
+  Gbar_Kv12_m=0
+  Gbar_Kv12_n=0
+  Gbar_Kv12_t=0
+  Gbar_Kv12_b=0
+  Gbar_Kv12_s=0
+  Gbar_Kv12_ns=0
+  Gbar_Kv12_nc=0
+}
+proc remove_Ks() {
+  Gbar_Kv3s_a=0
+  Gbar_Kv3s_a1=0
+  Gbar_Kv3s_i=0
+  Gbar_Kv3s_m=0
+  Gbar_Kv3s_n=0
+  Gbar_Kv3s_t=0
+  Gbar_Kv3s_b=0
+  Gbar_Kv3s_s=0
+  Gbar_Kv3s_ns=0
+  Gbar_Kv3s_nc=0
+}
+
+proc remove_Kv31() {
+  Gbar_Kv3s_a=0
+  Gbar_Kv3s_a1=0
+  Gbar_Kv3s_i=0
+  Gbar_Kv3s_m=0
+  Gbar_Kv3s_n=0
+  Gbar_Kv3s_t=0
+  Gbar_Kv3s_b=0
+  Gbar_Kv3s_s=0
+  Gbar_Kv3s_ns=0
+  Gbar_Kv3s_nc=0
+}
+proc change_K31() { local fac31
+  fac31=$1
+  Gbar_Kv31_a = Gbar_Kv31_a*fac31
+  Gbar_Kv31_a1 = Gbar_Kv31_a1*fac31
+  Gbar_Kv31_i = Gbar_Kv31_i*fac31
+  Gbar_Kv31_m = Gbar_Kv31_m*fac31
+  Gbar_Kv31_n = Gbar_Kv31_n*fac31
+  Gbar_Kv31_t = Gbar_Kv31_t*fac31
+  Gbar_Kv31_b = Gbar_Kv31_b*fac31
+  Gbar_Kv31_s = Gbar_Kv31_s*fac31
+  Gbar_Kv31_ns = Gbar_Kv31_ns*fac31
+  Gbar_Kv31_nc = Gbar_Kv31_nc*fac31
+}
+proc restore_K31() {
+  Gbar_Kv31_a=34
+  Gbar_Kv31_a1=34
+  Gbar_Kv31_i=1020
+  Gbar_Kv31_m=1.02
+  Gbar_Kv31_n=680 
+  Gbar_Kv31_t=100
+  Gbar_Kv31_b=34
+  Gbar_Kv31_s=1.02
+  Gbar_Kv31_ns=1.02
+  Gbar_Kv31_nc=680
+}
+proc change_caL() { local facal
+  facal=$1
+//  Pbar_caL_a = Pbar_caL_a*facal
+//  Pbar_caL_a1 = Pbar_caL_a1*facal
+  Pbar_caL_i = Pbar_caL_i*facal
+//  Pbar_caL_m = Pbar_caL_m*facal
+  Pbar_caL_n = Pbar_caL_n*facal
+//  Pbar_caL_t = Pbar_caL_t*facal
+//  Pbar_caL_b = Pbar_caL_b*facal
+  Pbar_caL_s = Pbar_caL_s*facal
+  Pbar_caL_ns = Pbar_caL_ns*facal
+  Pbar_caL_nc = Pbar_caL_nc*facal
+}
+
+
+proc change_H() { local fach
+  fach=$1
+  Gbar_H_HCNl_a = Gbar_H_HCNl_a*fach
+  Gbar_H_HCNl_a1 = Gbar_H_HCNl_a1*fach
+  Gbar_H_HCNl_i = Gbar_H_HCNl_i*fach
+  Gbar_H_HCNl_m = Gbar_H_HCNl_m*fach
+  Gbar_H_HCNl_n = Gbar_H_HCNl_n*fach
+  Gbar_H_HCNl_t = Gbar_H_HCNl_t*fach
+  Gbar_H_HCNl_b = Gbar_H_HCNl_b*fach
+  Gbar_H_HCNl_s = Gbar_H_HCNl_s*fach
+  Gbar_H_HCNl_ns = Gbar_H_HCNl_ns*fach
+  Gbar_H_HCNl_nc = Gbar_H_HCNl_nc*fach
+}
+
+proc change_D() { local facd
+  facd=$1
+  Gbar_Kv12_a = Gbar_Kv12_a*facd
+  Gbar_Kv12_a1 = Gbar_Kv12_a1*facd
+  Gbar_Kv12_i = Gbar_Kv12_i*facd
+  Gbar_Kv12_m = Gbar_Kv12_m*facd
+  Gbar_Kv12_n = Gbar_Kv12_n*facd
+  Gbar_Kv12_t = Gbar_Kv12_t*facd
+  Gbar_Kv12_b = Gbar_Kv12_b*facd
+  Gbar_Kv12_s = Gbar_Kv12_s*facd
+  Gbar_Kv12_ns = Gbar_Kv12_ns*facd
+  Gbar_Kv12_nc = Gbar_Kv12_nc*facd
+}
+
+proc change_M() { local facm
+  facm=$1
+  Gbar_Kv7M_a = Gbar_Kv7M_a*facm
+  Gbar_Kv7M_a1 = Gbar_Kv7M_a1*facm
+  Gbar_Kv7M_i = Gbar_Kv7M_i*facm
+  Gbar_Kv7M_m = Gbar_Kv7M_m*facm
+  Gbar_Kv7M_n = Gbar_Kv7M_n*facm
+  Gbar_Kv7M_t = Gbar_Kv7M_t*facm
+  Gbar_Kv7M_b = Gbar_Kv7M_b*facm
+  Gbar_Kv7M_s = Gbar_Kv7M_s*facm
+  Gbar_Kv7M_ns = Gbar_Kv7M_ns*facm
+  Gbar_Kv7M_nc = Gbar_Kv7M_nc*facm
+}
+
+proc change_SK() { local facsk
+  facsk=$1
+//  Gbar_SK_a = Gbar_SK_a*facsk
+//  Gbar_SK_a1 = Gbar_SK_a1*facsk
+  Gbar_SK_i = Gbar_SK_i*facsk
+//  Gbar_SK_m = Gbar_SK_m*facsk
+  Gbar_SK_n = Gbar_SK_n*facsk
+//  Gbar_SK_t = Gbar_SK_t*facsk
+//  Gbar_SK_b = Gbar_SK_b*facsk
+  Gbar_SK_s = Gbar_SK_s*facsk
+  Gbar_SK_ns = Gbar_SK_ns*facsk
+  Gbar_SK_nc = Gbar_SK_nc*facsk
+}
+
+proc change_BK() { local facbk
+  facbk=$1
+//  Gbar_ab4BK2_a = Gbar_ab4BK2_a*facbk
+//  Gbar_ab4BK2_a1 = Gbar_ab4BK2_a1*facbk
+  Gbar_ab4BK2_i = Gbar_ab4BK2_i*facbk
+//  Gbar_ab4BK2_m = Gbar_ab4BK2_m*facbk
+  Gbar_ab4BK2_n = Gbar_ab4BK2_n*facbk
+//  Gbar_ab4BK2_t = Gbar_ab4BK2_t*facbk
+//  Gbar_ab4BK2_b = Gbar_ab4BK2_b*facbk
+  Gbar_ab4BK2_s = Gbar_ab4BK2_s*facbk
+  Gbar_ab4BK2_ns = Gbar_ab4BK2_ns*facbk
+  Gbar_ab4BK2_nc = Gbar_ab4BK2_nc*facbk
+}
+
+proc restore_M() {
+  Gbar_Kv7M_a=4
+  Gbar_Kv7M_a1=4
+  Gbar_Kv7M_i=120
+  Gbar_Kv7M_m=0.12
+  Gbar_Kv7M_n=80
+  Gbar_Kv7M_t=12
+  Gbar_Kv7M_b=4
+  Gbar_Kv7M_s=0.12
+  Gbar_Kv7M_ns=0.12
+  Gbar_Kv7M_nc=80
+}
+
+proc restore_D() {
+  Gbar_Kv12_a=10
+  Gbar_Kv12_a1=10
+  Gbar_Kv12_i=300
+  Gbar_Kv12_m=0.3
+  Gbar_Kv12_n=200
+  Gbar_Kv12_t=30
+  Gbar_Kv12_b=10
+  Gbar_Kv12_s=0.3
+  Gbar_Kv12_ns=0.3
+  Gbar_Kv12_nc=200
+}
+
+proc restore_Ks() {
+  Gbar_Kv3s_a=6 
+  Gbar_Kv3s_a1=6 
+  Gbar_Kv3s_i=180
+  Gbar_Kv3s_m=0.18
+  Gbar_Kv3s_n=120
+  Gbar_Kv3s_t=18
+  Gbar_Kv3s_b=6 
+  Gbar_Kv3s_s=0.18
+  Gbar_Kv3s_ns=0.18
+  Gbar_Kv3s_nc=120
+}
+
+proc change_Kv31_slope()  { local slk
+  slk=$1
+  slope_n_Kv31=slk
+}     
+proc change_Nav16_vh()    { local vh
+  vh =$1
+  vhalf_n_Nav16=vh
+}     
+proc change_Rm()    { local rm
+  rm=$1
+  G_Rm=rm      
+}
+
+//=======================================================================
+
+proc set_params()  {
+  v_init = -60
+  G_e_pas = -60
+  G_Ra = 50
+  G_cm = 1
+  aXm_cm = 0.04
+  aXm_Rm = 30000
+  soma_cm = 0.1
+  soma_Rm = 12000
+  atau_ribbon1 = 0
+  G_Rm = 2000           	
+ 
+  Gbar_Nav16_a1		= 160
+  Gbar_Kv31_a1		= 34  
+  Gbar_Kv3s_a1		= 6  
+  Gbar_Kv12_a1		= 10  
+  Gbar_Kv7M_a1		= 4  
+  Gbar_Kv43A_a1		= 14  
+  Gbar_H_HCNl_a1	= 11.233 * fac 
+//  Gbar_ab4BK2_a1	= 5
+//  Pbar_caL_a1		= 5e-5
+//  Gbar_SK_a1		= 5
+  
+  Gbar_Nav16_a		= 160
+  Gbar_Kv31_a		= 34  
+  Gbar_Kv3s_a		= 6  
+  Gbar_Kv12_a		= 10  
+  Gbar_Kv7M_a		= 4  
+  Gbar_Kv43A_a		= 14  
+  Gbar_H_HCNl_a		= 11.233 * fac 
+//  Gbar_ab4BK2_a       = 5
+//  Pbar_caL_a          = 5e-5
+//  Gbar_SK_a           = 5
+
+  Gbar_Nav16_m		= 4.8 
+  Gbar_Kv31_m		= 1.02  
+  Gbar_Kv3s_m		= 0.18  
+  Gbar_Kv12_m		= 0.3  
+  Gbar_Kv7M_m		= 0.12  
+  Gbar_Kv43A_m		= 0.42  
+  Gbar_H_HCNl_m		= 0.337 * fac 
+//  Gbar_ab4BK2_m      = 5
+//  Pbar_caL_m         = 5e-5
+//  Gbar_SK_m          = 5
+
+  Gbar_Nav16_i		= 4800
+  Gbar_Kv31_i		= 1020  
+  Gbar_Kv3s_i		= 180  
+  Gbar_Kv12_i		= 300  
+  Gbar_Kv7M_i		= 120  
+  Gbar_Kv43A_i		= 420  
+  Gbar_H_HCNl_i		= 337 * fac 
+  Gbar_ab4BK2_i		= 300
+  Pbar_caL_i		= 0.00075
+  Gbar_SK_i		= 20
+
+  Gbar_Nav16_ns		= 4.8 
+  Gbar_Kv31_ns		= 1.02  
+  Gbar_Kv3s_ns		= 0.18  
+  Gbar_Kv12_ns		= 0.3  
+  Gbar_Kv7M_ns		= 0.12  
+  Gbar_Kv43A_ns		= 0.42  
+  Gbar_H_HCNl_ns	= 0.337 * fac 
+//  Gbar_ab4BK2_ns      = 5
+//  Pbar_caL_ns         = 5e-5
+//  Gbar_SK_ns          = 5
+  
+  Gbar_Nav16_nc		= 3200
+  Gbar_Kv31_nc		= 680  
+  Gbar_Kv3s_nc		= 120  
+  Gbar_Kv12_nc		= 200  
+  Gbar_Kv7M_nc		= 80  
+  Gbar_Kv43A_nc		= 280  
+  Gbar_H_HCNl_nc	= 224.67 * fac 
+//  Gbar_ab4BK2_nc      = 5
+//  Pbar_caL_nc         = 5e-5
+//  Gbar_SK_nc          = 5
+  
+  Gbar_Nav16_n		= 3200
+  Gbar_Kv31_n		= 680  
+  Gbar_Kv3s_n		= 120  
+  Gbar_Kv12_n		= 200  
+  Gbar_Kv7M_n		= 80  
+  Gbar_Kv43A_n		= 280  
+  Gbar_H_HCNl_n		= 224.67 * fac 
+//  Gbar_ab4BK2_n      = 5
+//  Pbar_caL_n         = 5e-5
+//  Gbar_SK_n          = 5
+  
+  Gbar_Nav16_b		= 160
+  Gbar_Kv31_b		= 34  
+  Gbar_Kv3s_b		= 6  
+  Gbar_Kv12_b		= 10  
+  Gbar_Kv7M_b		= 4  
+  Gbar_Kv43A_b		= 14  
+  Gbar_H_HCNl_b		= 11.233 * fac 
+//  Gbar_ab4BK2_b      = 5
+//  Pbar_caL_b         = 5e-5
+//  Gbar_SK_b          = 5
+  
+  Gbar_Nav16_s		= 4.8 
+  Gbar_Kv31_s		= 1.02  
+  Gbar_Kv3s_s		= 0.18  
+  Gbar_Kv12_s		= 0.3  
+  Gbar_Kv7M_s		= 0.12  
+  Gbar_Kv43A_s		= 0.42  
+  Gbar_H_HCNl_s		= 0.337 * fac 
+//  Gbar_ab4BK2_s      = 5
+//  Pbar_caL_s         = 5e-5
+//  Gbar_SK_s          = 5
+  
+  Gbar_Nav16_t		= 480
+  Gbar_Kv31_t		= 102  
+  Gbar_Kv3s_t		= 18  
+  Gbar_Kv12_t		= 30  
+  Gbar_Kv7M_t		= 12  
+  Gbar_Kv43A_t		= 42  
+  Gbar_H_HCNl_t		= 33.7*fac 
+//  Gbar_ab4BK2_t      = 5
+//  Pbar_caL_t         = 5e-5
+//  Gbar_SK_t          = 5
+    
+  vhalf_n_Nav16 		= -40	
+  slope_n_Nav16		= -4.5	
+  gates_n_Nav16		= 3
+  tau0_n_Nav16		= 0.04
+  tauA_n_Nav16		= 0.2     
+  tauG_n_Nav16		= 0.75   
+  tauF_n_Nav16		= 0	
+  tauDv_n_Nav16		= 0	
+  
+  vhalf_h_Nav16 		= -65	
+  slope_h_Nav16 		= 8
+  tau0_h_Nav16		= 0.0  
+  tauA_h_Nav16 		= 8  
+  tauG_h_Nav16		= 0.5   
+  tauF_h_Nav16		= 0
+  tauDv_h_Nav16 		= 0
+  
+  gates_n_Kv31		= 4
+  vhalf_n_Kv31 		= -15
+  slope_n_Kv31		= -15.6  
+  tau0_n_Kv31		= 1 
+  tauA_n_Kv31		= 3  
+  tauG_n_Kv31		= 0.25  
+  tauF_n_Kv31		= 0
+  tauDv_n_Kv31		= 0	
+  
+  gates_n_Kv3s		= 4  
+  vhalf_n_Kv3s 		= -23  
+  slope_n_Kv3s		= -7  
+  tau0_n_Kv3s		= 4       
+  tauA_n_Kv3s		= 45  
+  tauG_n_Kv3s		= 0.25  
+  tauF_n_Kv3s		= 0
+  tauDv_n_Kv3s		= 0	
+  
+  gates_n_Kv12		= 4
+  vhalf_n_Kv12 		= -48
+  slope_n_Kv12		= -6 
+  tau0_n_Kv12		= 1.5     
+  tauA_n_Kv12		= 5  
+  tauG_n_Kv12		= 0.34
+  tauF_n_Kv12		= 0
+  tauDv_n_Kv12		= 0	
+  
+  vhalf_h_Kv12	 	= -71
+  slope_h_Kv12 		= 10  
+  tau0_h_Kv12		= 50 
+  tauA_h_Kv12		= 300 
+  tauG_h_Kv12		= 0.5  
+  tauF_h_Kv12		= 0
+  tauDv_h_Kv12		= 0
+  
+  gates_n_H_HCNl		= 2
+  vhalf_n_H_HCNl 	= -98   
+  slope_n_H_HCNl		= 9   
+  tau0_n_H_HCNl		= 14.7  
+  tauA_n_H_HCNl		= 107  
+  tauG_n_H_HCNl		= 0.37  
+  tauF_n_H_HCNl		= 0
+  tauDv_n_H_HCNl		= 0
+  
+  gates_ns_H_HCNl	= 1
+  vhalf_ns_H_HCNl 	= -98 
+  slope_ns_H_HCNl	= 9  
+  tau0_ns_H_HCNl		= 161.3   
+  tauA_ns_H_HCNl		= 367  
+  tauG_ns_H_HCNl		= 0.3975
+  tauF_ns_H_HCNl		= 0
+  tauDv_ns_H_HCNl	= 0
+  
+  gates_n_Kv7M		= 1
+  vhalf_n_Kv7M 		= -41 	
+  slope_n_Kv7M		= -6
+  tau0_n_Kv7M		= 1.5  
+  tauA_n_Kv7M		= 54  
+  tauG_n_Kv7M		= 0.5 
+  tauF_n_Kv7M		= 0
+  tauDv_n_Kv7M		= 0
+  
+  gates_n_Kv43A		= 4
+  vhalf_n_Kv43A 		= -32	
+  slope_n_Kv43A		= -6.0
+  tau0_n_Kv43A		= 0.2  
+  tauA_n_Kv43A		= 2.5 
+  tauG_n_Kv43A		= 0.4 
+  tauF_n_Kv43A		= 0
+  tauDv_n_Kv43A		= 0
+  
+  vhalf_h_Kv43A 		= -64
+  slope_h_Kv43A 		= 6.5
+  tau0_h_Kv43A		= 4  
+  tauA_h_Kv43A 		= 20 
+  tauG_h_Kv43A		= 0.5
+  tauF_h_Kv43A		= 0
+  tauDv_h_Kv43A		= 0
+  
+  gates_n_caL		= 2
+  vhalf_n_caL 		= -30.1
+  slope_n_caL		= -4.77
+  tau0_n_caL		= 0  
+  tauA_n_caL		= 1.5 
+  tauG_n_caL		= 0.5 
+  tauF_n_caL		= 0
+  
+  vhalf_h_caL 		= -59.5
+  slope_h_caL 		= 10 
+  tau0_h_caL		= 0  
+  tauA_h_caL 		= 200
+  tauG_h_caL		= 0.5
+
+  hill_c_caL		= 2
+  K_c_caL			= 0.001
+  tauA_c_caL		= 10
+  tau0_c_caL		= 10
+
+  vhalf_n_ab4BK2 	= -56.5
+  slope_n_ab4BK2		= 11.8
+  tau0_n_ab4BK2		= 0  
+  tauA_n_ab4BK2		= 14.5
+  tauG_n_ab4BK2		= 0.48
+ 
+  hill_c_SK             = 4.64
+  hill_t_SK             =  2
+  K_c_SK                = 0.00056
+  tau0_c_SK             = 5
+  tauA_c_SK             = 45
+ 
+  G_ena=50
+  G_ek=-81
+  
+}
+
+proc print_kin() {
+   printf ( "Nav16   v0.5  slope    tau0    tauA   tauG   tauF \n")
+   printf ( "%8.3f  %8.3f  %8.3f  %8.3f  %6.3f  %6.3f \n", vhalf_n_Nav16, slope_n_Nav16, tau0_n_Nav16, tauA_n_Nav16, tauG_n_Nav16, tauF_n_Nav16)
+   printf ( "%8.3f  %8.3f  %8.3f  %8.3f  %6.3f  %6.3f \n", vhalf_h_Nav16, slope_h_Nav16, tau0_h_Nav16, tauA_h_Nav16, tauG_h_Nav16, tauF_h_Nav16)
+   printf ("\n")
+   printf ( "Kv12   v0.5  slope    tau0    tauA   tauG   tauF \n")
+   printf ( "%8.3f  %8.3f  %8.3f  %8.3f  %6.3f  %6.3f \n", vhalf_n_Kv12, slope_n_Kv12, tau0_n_Kv12, tauA_n_Kv12, tauG_n_Kv12, tauF_n_Kv12)
+   printf ( "%8.3f  %8.3f  %8.3f  %8.3f  %6.3f  %6.3f \n", vhalf_h_Kv12, slope_h_Kv12, tau0_h_Kv12, tauA_h_Kv12, tauG_h_Kv12, tauF_h_Kv12)
+   printf ("\n")
+   printf ( "Kv31   v0.5  slope    tau0    tauA   tauG   tauF \n")
+   printf ( "%8.3f  %8.3f  %8.3f  %8.3f  %6.3f  %6.3f \n", vhalf_n_Kv31, slope_n_Kv31, tau0_n_Kv31, tauA_n_Kv31, tauG_n_Kv31, tauF_n_Kv31)
+   printf ("\n")
+   printf ( "Kv3s   v0.5  slope    tau0    tauA   tauG   tauF \n")
+   printf ( "%8.3f  %8.3f  %8.3f  %8.3f  %6.3f  %6.3f \n", vhalf_n_Kv3s, slope_n_Kv3s, tau0_n_Kv3s, tauA_n_Kv3s, tauG_n_Kv3s, tauF_n_Kv3s)
+   printf ("\n")
+   printf ( "Kv7M   v0.5  slope    tau0    tauA   tauG   tauF \n")
+   printf ( "%8.3f  %8.3f  %8.3f  %8.3f  %6.3f  %6.3f \n", vhalf_n_Kv7M, slope_n_Kv7M, tau0_n_Kv7M, tauA_n_Kv7M, tauG_n_Kv7M, tauF_n_Kv7M)
+   printf ("\n")
+   printf ( "Kv43A   v0.5  slope    tau0    tauA   tauG   tauF \n")
+   printf ( "%8.3f  %8.3f  %8.3f  %8.3f  %6.3f  %6.3f \n", vhalf_n_Kv43A, slope_n_Kv43A, tau0_n_Kv43A, tauA_n_Kv43A, tauG_n_Kv43A, tauF_n_Kv43A)
+   printf ( "%8.3f  %8.3f  %8.3f  %8.3f  %6.3f  %6.3f \n", vhalf_h_Kv43A, slope_h_Kv43A, tau0_h_Kv43A, tauA_h_Kv43A, tauG_h_Kv43A, tauF_h_Kv43A)
+   printf ("\n")
+   printf ( "H_HCNl   v0.5  slope    tau0    tauA   tauG   tauF \n")
+   printf ( "%8.3f  %8.3f  %8.3f  %8.3f  %6.3f  %6.3f \n", vhalf_n_H_HCNl, slope_n_H_HCNl, tau0_n_H_HCNl, tauA_n_H_HCNl, tauG_n_H_HCNl, tauF_n_H_HCNl)
+   printf ("\n")
+   printf ( "H_HCNls   v0.5  slope    tau0    tauA   tauG   tauF \n")
+   printf ( "%8.3f  %8.3f  %8.3f  %8.3f  %6.3f  %6.3f \n", vhalf_ns_H_HCNl, slope_ns_H_HCNl, tau0_ns_H_HCNl, tauA_ns_H_HCNl, tauG_ns_H_HCNl, tauF_ns_H_HCNl)
+   printf ("\n")
+}
+proc print_RMkin() {
+   printf ( "RMna    v0.5  slope    v0.5_h   slope_h           \n")
+   printf ( "%8.3f  %8.3f  %8.3f  %8.3f \n", vhalf_m_RMna, slope_m_RMna, vhalf_h_RMna, slope_h_RMna )
+   printf ("\n")
+}
+
+proc print_gbar() {
+   printf ( "Nav16  a         b          a1       iseg         my       nod         ns       soma        nodc      term \n")
+   printf ( "%9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f \n", Gbar_Nav16_a, Gbar_Nav16_b, Gbar_Nav16_a1, Gbar_Nav16_i, Gbar_Nav16_m, Gbar_Nav16_n, Gbar_Nav16_ns, Gbar_Nav16_s, Gbar_Nav16_nc, Gbar_Nav16_t)
+   printf ("\n")
+   printf ( "Kv31   a         b          a1       iseg         my       nod         ns       soma        nodc      term \n")
+   printf ( "%9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f \n", Gbar_Kv31_a, Gbar_Kv31_b, Gbar_Kv31_a1, Gbar_Kv31_i, Gbar_Kv31_m, Gbar_Kv31_n, Gbar_Kv31_ns, Gbar_Kv31_s, Gbar_Kv31_nc, Gbar_Kv31_t)
+   printf ("\n")
+   printf ( "Kv3s   a         b          a1       iseg         my       nod         ns       soma        nodc      term \n")
+   printf ( "%9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f \n", Gbar_Kv3s_a, Gbar_Kv3s_b, Gbar_Kv3s_a1, Gbar_Kv3s_i, Gbar_Kv3s_m, Gbar_Kv3s_n, Gbar_Kv3s_ns, Gbar_Kv3s_s, Gbar_Kv3s_nc, Gbar_Kv3s_t)
+   printf ("\n")
+   printf ( "Kv12   a         b          a1       iseg         my       nod         ns       soma        nodc      term \n")
+   printf ( "%9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f \n", Gbar_Kv12_a, Gbar_Kv12_b, Gbar_Kv12_a1, Gbar_Kv12_i, Gbar_Kv12_m, Gbar_Kv12_n, Gbar_Kv12_ns, Gbar_Kv12_s, Gbar_Kv12_nc, Gbar_Kv12_t)
+   printf ("\n")
+   printf ( "Kv7M   a         b          a1       iseg         my       nod         ns       soma        nodc      term \n")
+   printf ( "%9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f \n", Gbar_Kv7M_a, Gbar_Kv7M_b, Gbar_Kv7M_a1, Gbar_Kv7M_i, Gbar_Kv7M_m, Gbar_Kv7M_n, Gbar_Kv7M_ns, Gbar_Kv7M_s, Gbar_Kv7M_nc, Gbar_Kv7M_t)
+   printf ("\n")
+   printf ( "Kv43A  a         b          a1       iseg         my       nod         ns       soma        nodc      term \n")
+   printf ( "%9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f \n", Gbar_Kv43A_a, Gbar_Kv43A_b, Gbar_Kv43A_a1, Gbar_Kv43A_i, Gbar_Kv43A_m, Gbar_Kv43A_n, Gbar_Kv43A_ns, Gbar_Kv43A_s, Gbar_Kv43A_nc, Gbar_Kv43A_t)
+   printf ("\n")
+   printf ( "H_HCNl  a         b          a1       iseg         my       nod         ns       soma        nodc      term \n")
+   printf ( "%9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f \n", Gbar_H_HCNl_a, Gbar_H_HCNl_b, Gbar_H_HCNl_a1, Gbar_H_HCNl_i, Gbar_H_HCNl_m, Gbar_H_HCNl_n, Gbar_H_HCNl_ns, Gbar_H_HCNl_s, Gbar_H_HCNl_nc, Gbar_H_HCNl_t)
+   printf ("\n")
+}
+proc print_RMgbar() {
+   printf ( "RMna  a         b          a1       iseg         my       nod         ns       soma        nodc      term \n")
+   printf ( "%9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f \n", Gbar_RMna_a, Gbar_RMna_b, Gbar_RMna_a1, Gbar_RMna_i, Gbar_RMna_m, Gbar_RMna_n, Gbar_RMna_ns, Gbar_RMna_s, Gbar_RMna_nc, Gbar_RMna_t)
+   printf ("\n")
+   printf ( "RMklt a         b          a1       iseg         my       nod         ns       soma        nodc      term \n")
+   printf ( "%9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f \n", Gbar_RMklt_a, Gbar_RMklt_b, Gbar_RMklt_a1, Gbar_RMklt_i, Gbar_RMklt_m, Gbar_RMklt_n, Gbar_RMklt_ns, Gbar_RMklt_s, Gbar_RMklt_nc, Gbar_RMklt_t)
+   printf ("\n")
+   printf ( "RMkht a         b          a1       iseg         my       nod         ns       soma        nodc      term \n")
+   printf ( "%9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f \n", Gbar_RMkht_a, Gbar_RMkht_b, Gbar_RMkht_a1, Gbar_RMkht_i, Gbar_RMkht_m, Gbar_RMkht_n, Gbar_RMkht_ns, Gbar_RMkht_s, Gbar_RMkht_nc, Gbar_RMkht_t)
+   printf ("\n")
+   printf ( "RMka  a         b          a1       iseg         my       nod         ns       soma        nodc      term \n")
+   printf ( "%9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f \n", Gbar_RMka_a, Gbar_RMka_b, Gbar_RMka_a1, Gbar_RMka_i, Gbar_RMka_m, Gbar_RMka_n, Gbar_RMka_ns, Gbar_RMka_s, Gbar_RMka_nc, Gbar_RMka_t)
+   printf ("\n")
+   printf ( "RMih  a         b          a1       iseg         my       nod         ns       soma        nodc      term \n")
+   printf ( "%9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f  %9.4f \n", Gbar_RMih_a, Gbar_RMih_b, Gbar_RMih_a1, Gbar_RMih_i, Gbar_RMih_m, Gbar_RMih_n, Gbar_RMih_ns, Gbar_RMih_s, Gbar_RMih_nc, Gbar_RMih_t)
+   printf ("\n")
+}
+
+//================================================================================
+// Begin execution
+taudef=0.3
+swdef=	400
+ad=0
+ib=0
+fac=1.0
+
+cvode.active(1)
+cvode.atol(1e-3)
+lambda_f_d = 0.1
+
+set_params()
+do_cell()
+moreBKSK()
+remove_D()
+remove_M()
+tstop = 1e3
+atau_ribbon1 = 50
+
+load_file("i6s-tnew.ses")
+proc keep_lines() {
+   Graph[0].exec_menu("Keep Lines")
+   Graph[1].exec_menu("Keep Lines")
+}
+proc erase() {
+   Graph[0].exec_menu("Erase")
+   Graph[1].exec_menu("Erase")
+}
+proc change_node() {
+   Graph[1].erase_all()
+   if (ifn==1) {Graph[1].addexpr("node[6].v(0.5)",1,1,0.65,0.8,2)}
+   if (ifn==2) {Graph[1].addexpr("node[3].v(0.5)",1,1,0.65,0.8,2)}
+   if (ifn==5) {Graph[1].addexpr("node[4].v(0.5)",1,1,0.65,0.8,2)}
+   if (ifn==72) {Graph[1].addexpr("node[10].v(0.5)",1,1,0.65,0.8,2)}
+   if (ifn !=1 && ifn !=2 && ifn!=5 && ifn!=72) {
+      print " invalid cell entry"
+   } else {
+      do_cell()
+      moreBKSK()
+      rate(Prate)
+   }
+}
+init()
+
+
+

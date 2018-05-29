@@ -1,0 +1,17 @@
+load_file("nrngui.hoc")
+
+xpanel("Holmes et al 2017")
+  xlabel("Click on a below button and then Init & Run to run a brief demo")
+  xlabel("Click quit to restart the simulation between runs")
+  xbutton("main-i6s-tnew.hoc", "{load_file(\"main-i6s-tnew.hoc\") run_ctrl() }")
+  xbutton("main-i6s-hc.hoc", "{load_file(\"main-i6s-hc.hoc\") run_ctrl() } ")
+  xbutton("main-i6sBKSK-tnew.hoc", "{load_file(\"main-i6sBKSK-tnew.hoc\") run_ctrl() }")
+  xbutton("main-i6sBKSK-hc.hoc", "{load_file(\"main-i6sBKSK-hc.hoc\") run_ctrl() }")
+  xbutton("quit", "quit()")
+xpanel()
+
+
+proc run_ctrl() {
+  load_file("run_ctrl.ses")
+}
+
