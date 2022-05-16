@@ -7,9 +7,12 @@ alpha(t) = t/tau * exp( -t/tau )
 ENDCOMMENT
 
 VERBATIM
-extern double du_dev0( );
-extern double dexp_dev( );
+/* defined in random.mod */
+double du_dev0();
+double dexp_dev(double);
+int igeom_dev(double);
 ENDVERBATIM
+
 
 NEURON {
   POINT_PROCESS 	ribbon1

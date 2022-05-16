@@ -8,7 +8,7 @@ ENDCOMMENT
 
 VERBATIM
 extern double du_dev0( );
-extern double dexp_dev( );
+extern double dexp_dev(double);
 ENDVERBATIM
 
 NEURON {
