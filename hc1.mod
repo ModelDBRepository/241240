@@ -7,8 +7,8 @@ Fires as Poisson process with rate constant tau
 ENDCOMMENT
 
 VERBATIM
-extern double du_dev0( );
-extern double dexp_dev( );
+double du_dev0();
+double dexp_dev(double);
 ENDVERBATIM
 
 NEURON {

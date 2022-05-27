@@ -36,7 +36,7 @@ extern double dexp_dev( double lambda );
 extern double dgauss_dev0();
 extern double dgauss_dev( double mean, double sdev );
 extern int igeom_dev( double pg );
-double ran2();	/* ran2 not to be used elsewhere */
+double ran2(long*);	/* ran2 not to be used elsewhere */
 
 ENDVERBATIM
 
